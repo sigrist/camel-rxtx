@@ -10,7 +10,7 @@
 	<version>0.0.1-SNAPSHOT</version>
 
 	<name>Camel RxTx Component</name>
-	<url>http://www.myorganization.org</url>
+	<url>https://github.com/sigrist/projects</url>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -99,4 +99,14 @@
 		</plugins>
 	</build>
 
+	<issueManagement>
+		<system>GitHub</system>
+		<url>https://github.com/sigrist/projects/issues</url>
+	</issueManagement>
+
+	<scm>
+		<url>https://github.com/sigrist/projects/tree/master/camel-rxtx</url>
+		<connection>scm:git:git@github.com:sigrist/projects.git</connection>
+		<developerConnection>scm:git:git@github.com:sigrist/projects.git</developerConnection>
+	</scm>
 </project>

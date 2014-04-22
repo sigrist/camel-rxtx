@@ -11,6 +11,8 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.impl.DefaultConsumer;
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The RxTx consumer.
@@ -18,6 +20,7 @@ import org.apache.commons.io.IOUtils;
 public class RxTxConsumer extends DefaultConsumer implements
 		SerialPortEventListener {
 	private final RxTxEndpoint endpoint;
+	private static Logger log = LoggerFactory.getLogger(RxTxConsumer.class);
 
 	private InputStream inputStream;
 
@@ -28,6 +31,8 @@ public class RxTxConsumer extends DefaultConsumer implements
 
 	@Override
 	protected void doStart() throws Exception {
+		super.doStart();
+		log.trace("[doStart] Initializing RxRxConsumer for '"+endpoint.getPort()+"'");
 		SerialPort serialPort = endpoint.getPort(endpoint.getPort(),
 				endpoint.getReceiveTimeout());
 
@@ -38,7 +43,7 @@ public class RxTxConsumer extends DefaultConsumer implements
 
 	@Override
 	protected void doStop() throws Exception {
-
+		super.doStop();
 		if (this.inputStream != null) {
 			inputStream.close();
 		}

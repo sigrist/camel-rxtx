@@ -21,7 +21,13 @@ public class RxTxComponentTest extends CamelTestSupport {
     protected RouteBuilder createRouteBuilder() throws Exception {
         return new RouteBuilder() {
             public void configure() {
-                from("rxtx://foo?port=/dev/ttyO1&dataBits=8&stopBits=1&parity=0")
+            	String url = "rxtx://ttyO1?port=/dev/ttyO1&dataBits=8&stopBits=1&parity=0"; 
+            	
+            	// Send data to serial port
+            	from("direct:to_serial").to("url");
+            	
+            	// From serial port, just print
+                from(url)
                   .process(new Processor() {
 					
 					@Override
