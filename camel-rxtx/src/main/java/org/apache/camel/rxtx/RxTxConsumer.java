@@ -36,9 +36,14 @@ public class RxTxConsumer extends DefaultConsumer implements
 		SerialPort serialPort = endpoint.getPort(endpoint.getPort(),
 				endpoint.getReceiveTimeout());
 
+		log.trace("[doStart] Serial port is open, registering the event listener");
 		serialPort.addEventListener(this);
+		serialPort.notifyOnDataAvailable(true);
+		serialPort.enableReceiveTimeout(1000);
 
+		log.trace("[doStart] Getting the input stream");
 		this.inputStream = serialPort.getInputStream();
+		log.trace("[doStart] \tInput stream: "+this.inputStream);
 	}
 
 	@Override
@@ -54,23 +59,40 @@ public class RxTxConsumer extends DefaultConsumer implements
 		log.trace("[serialEvent] Data received on serial port");
 
 		int eType = event.getEventType();
+		log.trace("[serialEvent] \tEvent type: "+eType);
 
 		switch (eType) {
 		case SerialPortEvent.DATA_AVAILABLE:
 			try {
+				log.trace("[serialEvent] \tData available: "+(inputStream.available())+" bytes");
 				ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-				IOUtils.copy(inputStream, outputStream);
+				log.trace("[serialEvent] \tCopying the stream data");
+				{
+					byte[] bufferLeitura = new byte[255];
+					int nodeBytes = 0;
+					while (inputStream.available() > 0) {
+						nodeBytes = inputStream.read(bufferLeitura);
+					}
+					log.trace("[serialEvent] \tRead '"+nodeBytes+"' bytes");
+					outputStream.write(bufferLeitura);
+				}
+				//IOUtils.copy(inputStream, outputStream);
+				log.trace("[serialEvent] \tCopy ok");
 
 				byte[] bytes = outputStream.toByteArray();
 				outputStream.close();
 
+				log.trace("[serialEvent] \tSend data to exchange");
 				sendDataExchange(bytes);
+				log.trace("[serialEvent] \tEvent finished");
 
 			} catch (Throwable t) {
+				log.trace("[serialEvent] \tError: "+t);
 				getExceptionHandler().handleException("Error reading data", t);
 			}
 
 		default:
+			log.trace("[serialEvent] \tDefault event");
 			break;
 		}
 

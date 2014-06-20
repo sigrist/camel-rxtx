@@ -130,19 +130,26 @@ public class RxTxEndpoint extends DefaultEndpoint {
 				+ timeout + "'");
 
 		if (this.serialPort == null) {
+			log.debug("[getPort] Current serial port is null, try to open");
 
 			// Get the list of ports
 			Enumeration<?> portList = CommPortIdentifier.getPortIdentifiers();
+			
+			log.debug("[getPort] Port List, has mode elements: "+portList.hasMoreElements());
 
 			while (portList.hasMoreElements()) {
 				CommPortIdentifier portId = (CommPortIdentifier) portList
 						.nextElement();
+				log.trace("[getPort] Checking portId: "+portId.getName() );
 				// Check if the port is a serial port
 				if (portId.getPortType() == CommPortIdentifier.PORT_SERIAL) {
+					log.trace("[getPort] \tIs serial port: "+portId.getPortType() );
 					if (portId.getName().equals(port)) {
 						try {
+							log.trace("[getPort] Open the port");
 							serialPort = (SerialPort) portId.open(
 									"TESTE_SERIAL", timeout);
+							log.trace("[getPort] Port is open" );
 						} catch (Exception e) {
 							e.printStackTrace();
 							// TODO Erro ao abrir a porta serial.

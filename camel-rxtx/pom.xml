@@ -6,7 +6,6 @@
 
 	<groupId>org.apache.camel.rxtx</groupId>
 	<artifactId>camel-rxtx</artifactId>
-	<packaging>bundle</packaging>
 	<version>0.0.1-SNAPSHOT</version>
 
 	<name>Camel RxTx Component</name>
