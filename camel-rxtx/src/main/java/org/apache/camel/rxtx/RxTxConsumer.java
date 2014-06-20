@@ -62,21 +62,21 @@ public class RxTxConsumer extends DefaultConsumer implements
 		log.trace("[serialEvent] \tEvent type: "+eType);
 
 		switch (eType) {
-		case SerialPortEvent.DATA_AVAILABLE:
+		case SerialPortEvent.DATA_AVAILABLE: 
 			try {
 				log.trace("[serialEvent] \tData available: "+(inputStream.available())+" bytes");
 				ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 				log.trace("[serialEvent] \tCopying the stream data");
 				{
-					byte[] bufferLeitura = new byte[255];
 					int nodeBytes = 0;
-					while (inputStream.available() > 0) {
-						nodeBytes = inputStream.read(bufferLeitura);
+					int r;
+					
+					while ((r = inputStream.read()) != -1) {
+						outputStream.write(r);
+						nodeBytes++;
 					}
 					log.trace("[serialEvent] \tRead '"+nodeBytes+"' bytes");
-					outputStream.write(bufferLeitura);
 				}
-				//IOUtils.copy(inputStream, outputStream);
 				log.trace("[serialEvent] \tCopy ok");
 
 				byte[] bytes = outputStream.toByteArray();
@@ -91,6 +91,7 @@ public class RxTxConsumer extends DefaultConsumer implements
 				getExceptionHandler().handleException("Error reading data", t);
 			}
 
+			break;
 		default:
 			log.trace("[serialEvent] \tDefault event");
 			break;

@@ -1,19 +1,16 @@
 package org.apache.camel.rxtx;
 
-import java.io.OutputStream;
-
 import gnu.io.SerialPort;
+
+import java.io.OutputStream;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.impl.DefaultProducer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * The RxTx producer.
  */
 public class RxTxProducer extends DefaultProducer {
-    private static final Logger LOG = LoggerFactory.getLogger(RxTxProducer.class);
     private RxTxEndpoint endpoint;
 	private OutputStream outputStream;
 
@@ -41,7 +38,6 @@ public class RxTxProducer extends DefaultProducer {
 		}
 	}
     
-
     public void process(Exchange exchange) throws Exception {
         Object body = exchange.getIn().getBody();
         
@@ -51,7 +47,12 @@ public class RxTxProducer extends DefaultProducer {
         	
         	outputStream.write(bytes);
         } else {
-        	throw new IllegalArgumentException("Expected body as byte[]");
+        	if (endpoint.isFailOnError()) {
+        		throw new IllegalArgumentException("Expected body as byte[]");
+        	} else {
+        		log.warn("[process] Expected body as byte[]. The body was not sent to the serial.");
+        	}
+        	
         }
     }
 

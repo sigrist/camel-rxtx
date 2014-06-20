@@ -43,9 +43,13 @@ public class RxTxEndpoint extends DefaultEndpoint {
 	@UriParam
 	private int receiveTimeout;
 
+	@UriParam
+	private boolean failOnError;
+
 	private SerialPort serialPort;
 
 	public RxTxEndpoint() {
+		this.failOnError = false;
 	}
 
 	public RxTxEndpoint(String uri, RxTxComponent component) {
@@ -124,6 +128,15 @@ public class RxTxEndpoint extends DefaultEndpoint {
 		return baudRate;
 	}
 
+	public void setFailOnError(boolean failOnError) {
+		this.failOnError = failOnError;
+	}
+
+	@ManagedAttribute(description = "Fail the consumer/producer when there is an error")
+	public boolean isFailOnError() {
+		return failOnError;
+	}
+
 	protected SerialPort getPort(String port, int timeout) throws Exception {
 		// Trying to open the port
 		log.debug("[getPort] Getting port '" + port + "' with timeout '"
@@ -134,25 +147,38 @@ public class RxTxEndpoint extends DefaultEndpoint {
 
 			// Get the list of ports
 			Enumeration<?> portList = CommPortIdentifier.getPortIdentifiers();
-			
-			log.debug("[getPort] Port List, has mode elements: "+portList.hasMoreElements());
+
+			log.debug("[getPort] Port List, has mode elements: "
+					+ portList.hasMoreElements());
 
 			while (portList.hasMoreElements()) {
 				CommPortIdentifier portId = (CommPortIdentifier) portList
 						.nextElement();
-				log.trace("[getPort] Checking portId: "+portId.getName() );
+				log.trace("[getPort] Checking portId: " + portId.getName());
 				// Check if the port is a serial port
 				if (portId.getPortType() == CommPortIdentifier.PORT_SERIAL) {
-					log.trace("[getPort] \tIs serial port: "+portId.getPortType() );
+					log.trace("[getPort] \tIs serial port: "
+							+ portId.getPortType());
 					if (portId.getName().equals(port)) {
 						try {
 							log.trace("[getPort] Open the port");
 							serialPort = (SerialPort) portId.open(
 									"TESTE_SERIAL", timeout);
-							log.trace("[getPort] Port is open" );
+							log.trace("[getPort] Port is open");
+							
+							// Break the while loop
+							break;
 						} catch (Exception e) {
-							e.printStackTrace();
-							// TODO Erro ao abrir a porta serial.
+
+							if (this.isFailOnError()) {
+								log.trace("[getPort] Open the port");
+								throw e;
+							} else {
+								log.error(
+										"[getPort] Fail trying to open the serial port",
+										e);
+							}
+
 						}
 					}
 				}
