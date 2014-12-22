@@ -9,25 +9,29 @@
 	<version>0.0.1-SNAPSHOT</version>
 
 	<name>Camel RxTx Component</name>
-	<url>https://github.com/sigrist/projects</url>
+	<url>https://github.com/sigrist/camel-rxtx</url>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		
+		<camel.version>2.12.2</camel.version>
+		<rxtx.version>2.1.7</rxtx.version>
+		
 	</properties>
 
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.camel</groupId>
 			<artifactId>camel-core</artifactId>
-			<version>2.12.2</version>
+			<version>${camel.version}</version>
 		</dependency>
 
 		<!-- RxTx -->
 		<dependency>
 			<groupId>org.rxtx</groupId>
 			<artifactId>rxtx</artifactId>
-			<version>2.1.7</version>
+			<version>${rxtx.version}</version>
 		</dependency>
 
 		<!-- Commons IO -->
@@ -100,12 +104,16 @@
 
 	<issueManagement>
 		<system>GitHub</system>
-		<url>https://github.com/sigrist/projects/issues</url>
+		<url>https://github.com/sigrist/camel-rxtx/issues</url>
 	</issueManagement>
 
 	<scm>
-		<url>https://github.com/sigrist/projects/tree/master/camel-rxtx</url>
-		<connection>scm:git:git@github.com:sigrist/projects.git</connection>
-		<developerConnection>scm:git:git@github.com:sigrist/projects.git</developerConnection>
+		<url>https://github.com/sigrist/camel-rxtx/tree/master/</url>
+		<connection>scm:git:git@github.com:sigrist/camel-rxtx.git</connection>
+		<developerConnection>scm:git:</developerConnection>
 	</scm>
+	<ciManagement>
+		<system>travis-ci</system>
+		<url>https://travis-ci.org/sigrist/camel-rxtx</url>
+	</ciManagement>
 </project>
