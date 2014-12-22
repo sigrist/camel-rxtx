@@ -1,6 +1,13 @@
-Apache Camel RX-TX component
-========
+Camel Component Project
+=======================
 
-The idea for this component is to provide to Apache Camel to send and receive data from serial ports using the JavaComm API.
+This project is a template of a Camel component.
 
+To build this project use
 
+    mvn install
+
+For more help see the Apache Camel documentation:
+
+    http://camel.apache.org/writing-components.html
+    
